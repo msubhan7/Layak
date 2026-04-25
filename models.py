@@ -260,3 +260,172 @@ class University(db.Model):
 
     def __repr__(self):
         return f"<University {self.name}>"
+
+# ─────────────────────────────────────────────
+# ESSAY EVALUATIONS — AI evaluation of each essay
+# ─────────────────────────────────────────────
+class EssayEvaluation(db.Model):
+    __tablename__ = "essay_evaluations"
+ 
+    id                    = db.Column(db.Integer, primary_key=True)
+    essay_id              = db.Column(db.Integer, db.ForeignKey("essays.id"), nullable=False)
+    scholarship_id        = db.Column(db.Integer, db.ForeignKey("scholarships.id"), nullable=False)
+    overall_score         = db.Column(db.Float)               # e.g. 7.5 out of 10
+    criterion_scores_json = db.Column(db.JSON)                # {"clarity": 8, "relevance": 9, ...}
+    matched_requirements  = db.Column(db.JSON, default=list)  # requirements the essay addresses
+    missing_requirements  = db.Column(db.JSON, default=list)  # requirements not addressed
+    weaknesses            = db.Column(db.JSON, default=list)  # list of weak points
+    revision_suggestions  = db.Column(db.JSON, default=list)  # list of improvement tips
+    paragraph_feedback_json = db.Column(db.JSON)              # per-paragraph AI feedback
+    created_at            = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+ 
+    essay       = db.relationship("Essay",       backref="evaluations")
+    scholarship = db.relationship("Scholarship", backref="essay_evaluations")
+ 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "essay_id": self.essay_id,
+            "scholarship_id": self.scholarship_id,
+            "overall_score": self.overall_score,
+            "criterion_scores_json": self.criterion_scores_json,
+            "matched_requirements": self.matched_requirements or [],
+            "missing_requirements": self.missing_requirements or [],
+            "weaknesses": self.weaknesses or [],
+            "revision_suggestions": self.revision_suggestions or [],
+            "paragraph_feedback_json": self.paragraph_feedback_json,
+            "created_at": str(self.created_at),
+        }
+ 
+    def __repr__(self):
+        return f"<EssayEvaluation essay={self.essay_id} score={self.overall_score}>"
+ 
+ 
+# ─────────────────────────────────────────────
+# ELIGIBILITY RESULTS — AI eligibility check per user per scholarship
+# ─────────────────────────────────────────────
+class EligibilityResult(db.Model):
+    __tablename__ = "eligibility_results"
+ 
+    id             = db.Column(db.Integer, primary_key=True)
+    user_id        = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    scholarship_id = db.Column(db.Integer, db.ForeignKey("scholarships.id"), nullable=False)
+    eligible       = db.Column(db.Boolean)                    # True / False
+    passed_criteria = db.Column(db.JSON, default=list)        # criteria the student meets
+    failed_criteria = db.Column(db.JSON, default=list)        # criteria the student fails
+    warnings       = db.Column(db.JSON, default=list)         # borderline issues to note
+    created_at     = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+ 
+    user        = db.relationship("User",        backref="eligibility_results")
+    scholarship = db.relationship("Scholarship", backref="eligibility_results")
+ 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "scholarship_id": self.scholarship_id,
+            "eligible": self.eligible,
+            "passed_criteria": self.passed_criteria or [],
+            "failed_criteria": self.failed_criteria or [],
+            "warnings": self.warnings or [],
+            "created_at": str(self.created_at),
+        }
+ 
+    def __repr__(self):
+        return f"<EligibilityResult user={self.user_id} scholarship={self.scholarship_id} eligible={self.eligible}>"
+ 
+ 
+# ─────────────────────────────────────────────
+# SCHOLARSHIP MATCHES — AI-ranked scholarship matches per user
+# ─────────────────────────────────────────────
+class ScholarshipMatch(db.Model):
+    __tablename__ = "scholarship_matches"
+ 
+    id             = db.Column(db.Integer, primary_key=True)
+    user_id        = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    scholarship_id = db.Column(db.Integer, db.ForeignKey("scholarships.id"), nullable=False)
+    fit_score      = db.Column(db.Float)        # 1–10 match score from AI
+    match_reason   = db.Column(db.Text)         # why this is a good match
+    risk_note      = db.Column(db.Text)         # any risks or concerns
+    created_at     = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+ 
+    user        = db.relationship("User",        backref="scholarship_matches")
+    scholarship = db.relationship("Scholarship", backref="scholarship_matches")
+ 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "scholarship_id": self.scholarship_id,
+            "fit_score": self.fit_score,
+            "match_reason": self.match_reason,
+            "risk_note": self.risk_note,
+            "created_at": str(self.created_at),
+        }
+ 
+    def __repr__(self):
+        return f"<ScholarshipMatch user={self.user_id} scholarship={self.scholarship_id} score={self.fit_score}>"
+ 
+ 
+# ─────────────────────────────────────────────
+# NOTIFICATIONS — in-app notifications per user
+# ─────────────────────────────────────────────
+class Notification(db.Model):
+    __tablename__ = "notifications"
+ 
+    id         = db.Column(db.Integer, primary_key=True)
+    user_id    = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    message    = db.Column(db.Text, nullable=False)   # "Your essay scored 8.5/10!"
+    type       = db.Column(db.String(50))             # "essay" / "eligibility" / "deadline" / "match"
+    is_read    = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+ 
+    user = db.relationship("User", backref="notifications")
+ 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "message": self.message,
+            "type": self.type,
+            "is_read": self.is_read,
+            "created_at": str(self.created_at),
+        }
+ 
+    def __repr__(self):
+        return f"<Notification user={self.user_id} type={self.type} read={self.is_read}>"
+ 
+ 
+# ─────────────────────────────────────────────
+# RESHAPED CONTENTS — AI reshaped essays for different scholarships
+# ─────────────────────────────────────────────
+class ReshapedContent(db.Model):
+    __tablename__ = "reshaped_contents"
+ 
+    id               = db.Column(db.Integer, primary_key=True)
+    user_id          = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    source_essay_id  = db.Column(db.Integer, db.ForeignKey("essays.id"), nullable=False)
+    scholarship_id   = db.Column(db.Integer, db.ForeignKey("scholarships.id"), nullable=False)
+    target_question  = db.Column(db.Text)       # the new question this essay is reshaped for
+    word_limit       = db.Column(db.Integer)    # word limit of the target question
+    reshaped_text    = db.Column(db.Text)       # the AI-reshaped essay content
+    created_at       = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+ 
+    user         = db.relationship("User",        backref="reshaped_contents")
+    source_essay = db.relationship("Essay",       backref="reshaped_contents")
+    scholarship  = db.relationship("Scholarship", backref="reshaped_contents")
+ 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "source_essay_id": self.source_essay_id,
+            "scholarship_id": self.scholarship_id,
+            "target_question": self.target_question,
+            "word_limit": self.word_limit,
+            "reshaped_text": self.reshaped_text,
+            "created_at": str(self.created_at),
+        }
+ 
+    def __repr__(self):
+        return f"<ReshapedContent user={self.user_id} scholarship={self.scholarship_id}>"
