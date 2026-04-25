@@ -1,0 +1,267 @@
+/**
+ * mockData.js
+ * -----------
+ * Centralised mock data for the Sarjana application.
+ * In a real app, these would be fetched from the API layer.
+ * Keeping them here makes it easy to swap in real API calls later.
+ */
+
+export const MOCK_USER = {
+  name: "Aisyah Rahman",
+  email: "aisyah.rahman@student.my",
+  avatar: "AR",
+  school: "SMK Sri Hartamas",
+  cgpa: "3.89",
+};
+
+export const MOCK_SCHOLARSHIPS = [
+  {
+    id: "sc1",
+    title: "Yayasan Khazanah Watan Scholarship",
+    provider: "Yayasan Khazanah",
+    university: "Overseas — Ivy League / Oxbridge",
+    deadline: "2026-05-15",
+    daysLeft: 21,
+    wordLimit: 800,
+    fitScore: 92,
+    eligibility: "eligible",
+    status: "draft",
+    tags: ["Need-based", "Leadership", "Overseas"],
+    prompt: "Describe a community you belong to and how you have contributed to its growth.",
+    requirements: [
+      "Malaysian citizen",
+      "CGPA ≥ 3.75",
+      "Household income under RM8,000",
+      "Leadership record",
+    ],
+  },
+  {
+    id: "sc2",
+    title: "Bank Negara Kijang Scholarship",
+    provider: "Bank Negara Malaysia",
+    university: "LSE, Wharton, Imperial",
+    deadline: "2026-06-02",
+    daysLeft: 39,
+    wordLimit: 600,
+    fitScore: 87,
+    eligibility: "eligible",
+    status: "reviewed",
+    tags: ["Finance", "Economics", "Overseas"],
+    prompt: "Why is monetary stability foundational to national development?",
+    requirements: [
+      "Malaysian citizen",
+      "SPM 9A+ or equivalent",
+      "Interest in economics/finance",
+    ],
+  },
+  {
+    id: "sc3",
+    title: "Petronas Education Sponsorship",
+    provider: "Petronas",
+    university: "UTP / UM / UKM",
+    deadline: "2026-05-30",
+    daysLeft: 36,
+    wordLimit: 500,
+    fitScore: 78,
+    eligibility: "warnings",
+    status: "needs-improvement",
+    tags: ["STEM", "Engineering", "Local"],
+    prompt: "How do you envision contributing to Malaysia's energy transition?",
+    requirements: ["Malaysian citizen", "STEM track", "CGPA ≥ 3.50"],
+  },
+  {
+    id: "sc4",
+    title: "MARA Graduate Excellence Award",
+    provider: "MARA",
+    university: "Local public universities",
+    deadline: "2026-07-10",
+    daysLeft: 77,
+    wordLimit: 750,
+    fitScore: 71,
+    eligibility: "eligible",
+    status: "ready",
+    tags: ["Bumiputera", "Research"],
+    prompt: "Describe a research question you would pursue and why it matters.",
+    requirements: [
+      "Bumiputera status",
+      "CGPA ≥ 3.70",
+      "Research proposal",
+    ],
+  },
+  {
+    id: "sc5",
+    title: "Cambridge Trust — ASEAN Bursary",
+    provider: "Cambridge Trust",
+    university: "University of Cambridge",
+    deadline: "2026-04-29",
+    daysLeft: 5,
+    wordLimit: 1000,
+    fitScore: 84,
+    eligibility: "eligible",
+    status: "draft",
+    tags: ["Overseas", "Need-based"],
+    prompt:
+      "What intellectual question keeps you up at night, and how will Cambridge help you answer it?",
+    requirements: [
+      "Admitted to Cambridge",
+      "Demonstrated financial need",
+      "Academic excellence",
+    ],
+  },
+  {
+    id: "sc6",
+    title: "Shell Malaysia Future Leaders",
+    provider: "Shell",
+    university: "Any accredited Malaysian IPT",
+    deadline: "2026-08-01",
+    daysLeft: 99,
+    wordLimit: 450,
+    fitScore: 68,
+    eligibility: "not-eligible",
+    status: "—",
+    tags: ["Energy", "Leadership"],
+    prompt: "Describe a time you led a team through meaningful change.",
+    requirements: [
+      "Engineering/Business track",
+      "CGPA ≥ 3.60",
+      "Leadership at state level",
+    ],
+  },
+];
+
+export const MOCK_ESSAYS = [
+  {
+    id: "e1",
+    title: "Khazanah — Community Contribution",
+    scholarshipId: "sc1",
+    words: 742,
+    score: 82,
+    version: 3,
+    updated: "2 days ago",
+  },
+  {
+    id: "e2",
+    title: "Bank Negara — Monetary Stability",
+    scholarshipId: "sc2",
+    words: 598,
+    score: 89,
+    version: 2,
+    updated: "5 days ago",
+  },
+  {
+    id: "e3",
+    title: "Petronas — Energy Transition",
+    scholarshipId: "sc3",
+    words: 420,
+    score: 71,
+    version: 1,
+    updated: "yesterday",
+  },
+  {
+    id: "e4",
+    title: "Cambridge — Intellectual Question",
+    scholarshipId: "sc5",
+    words: 0,
+    score: null,
+    version: 0,
+    updated: "—",
+  },
+];
+
+export const MOCK_DOCUMENTS = [
+  {
+    id: "d1",
+    type: "IC / Passport",
+    filename: "ic_aisyah.pdf",
+    uploaded: "2026-03-12",
+    status: "verified",
+  },
+  {
+    id: "d2",
+    type: "Academic Transcript",
+    filename: "transcript_sem5.pdf",
+    uploaded: "2026-04-01",
+    status: "verified",
+  },
+  {
+    id: "d3",
+    type: "Income Statement (EA)",
+    filename: "ea_form_2025.pdf",
+    uploaded: "2026-04-08",
+    status: "pending",
+  },
+  {
+    id: "d4",
+    type: "Resume / CV",
+    filename: "resume_v4.pdf",
+    uploaded: "2026-04-15",
+    status: "verified",
+  },
+  {
+    id: "d5",
+    type: "Recommendation Letter",
+    filename: null,
+    uploaded: null,
+    status: "missing",
+  },
+  {
+    id: "d6",
+    type: "Certificates",
+    filename: "certs_bundle.pdf",
+    uploaded: "2026-02-28",
+    status: "verified",
+  },
+];
+
+export const MOCK_NOTIFICATIONS = [
+  {
+    id: "n1",
+    type: "deadline",
+    message: "Cambridge Trust — ASEAN Bursary is due in 5 days.",
+    time: "2h ago",
+    unread: true,
+  },
+  {
+    id: "n2",
+    type: "score",
+    message: "Your Bank Negara essay score improved from 81 → 89.",
+    time: "yesterday",
+    unread: true,
+  },
+  {
+    id: "n3",
+    type: "doc",
+    message: "Recommendation Letter is still missing for 3 applications.",
+    time: "yesterday",
+    unread: true,
+  },
+  {
+    id: "n4",
+    type: "eligibility",
+    message: "Shell Malaysia: you do not meet the leadership criterion.",
+    time: "2 days ago",
+    unread: false,
+  },
+  {
+    id: "n5",
+    type: "ai",
+    message: "New AI evaluation ready for Petronas Energy Transition essay.",
+    time: "3 days ago",
+    unread: false,
+  },
+
+  {
+    id: "n6",
+    type: "doc_expiry",
+    message: "Your Income Statement (EA) may expire soon — check if a newer version is needed.",
+    time: "4 days ago",
+    unread: false,
+  },
+  {
+    id: "n7",
+    type: "status_update",
+    message: "Reminder: Yayasan Khazanah application has been in Draft for 14 days.",
+    time: "5 days ago",
+    unread: false,
+  },
+];

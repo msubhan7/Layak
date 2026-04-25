@@ -1,70 +1,166 @@
-# Getting Started with Create React App
+# 🎓 ScholarEasy — Data Layer Setup Guide
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## What You're Building
+An all-in-one platform for Malaysian students to find, apply for, and track scholarships + university applications.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📁 File Overview
 
-### `npm start`
+| File | What it does |
+|---|---|
+| `models.py` | All database table definitions (User, Profile, Scholarship, Document, Application, Essay) |
+| `app.py` | Flask app factory — starts the server, creates the DB |
+| `data_helpers.py` | All query functions — teammates import these, not raw SQLAlchemy |
+| `seed.py` | Fills the scholarships table with 8 real Malaysian scholarships |
+| `requirements.txt` | Python packages to install |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ Software to Install
 
-### `npm test`
+### 1. Python 3.11+
+Download from https://www.python.org/downloads/
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 2. VS Code (recommended IDE)
+Download from https://code.visualstudio.com/
 
-### `npm run build`
+### 3. That's it for the hackathon — SQLite is built into Python, no extra DB software needed!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ⚡ First-Time Setup (run these once)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+# 1. Create a virtual environment (keeps packages isolated)
+python -m venv venv
 
-### `npm run eject`
+# 2. Activate it
+# On Windows:
+venv\Scripts\activate
+# On Mac/Linux:
+source venv/bin/activate
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# 3. Install packages
+pip install -r requirements.txt
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# 4. Start the server (this also creates scholarship.db automatically)
+python app.py
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# 5. In a separate terminal, seed the scholarships data
+python seed.py
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+After this you'll see `scholarship.db` appear in your folder — that's your entire database as a single file. ✅
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 👥 How Your Teammates Use Your Work
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Tell them to import from `data_helpers.py`:
 
-### Code Splitting
+```python
+from data_helpers import (
+    create_user,
+    get_user_by_email,
+    create_or_update_profile,
+    get_scholarships_for_student,
+    create_application,
+    update_application_status,
+    save_eligibility_result,   # called by whoever builds the AI checker
+    save_essay_ai_feedback,    # called by whoever builds the AI essay scorer
+)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Examples for the frontend/backend teammate:
 
-### Analyzing the Bundle Size
+```python
+# Register a new user
+user = create_user("ali@gmail.com", "mypassword123")
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Update their profile
+create_or_update_profile(user.id, {
+    "full_name": "Muhammad Ali bin Hassan",
+    "cgpa": 3.85,
+    "course": "Computer Science",
+    "university": "Universiti Malaya",
+    "race": "Malay",
+    "citizenship": "Malaysian",
+})
 
-### Making a Progressive Web App
+# Get scholarships they're eligible for
+scholarships = get_scholarships_for_student(user.id)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Start tracking a scholarship (scholarship_id=1 is Khazanah)
+application = create_application(user.id, scholarship_id=1)
 
-### Advanced Configuration
+# Move to in_progress + auto-create essay slots
+update_application_status(application.id, "in_progress")
+initialise_essays_for_application(application.id)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Example for the AI teammate:
 
-### Deployment
+```python
+# After AI checks eligibility:
+save_eligibility_result(application.id,
+    result={"eligible": True, "reason": "CGPA meets requirement, open to all races"},
+    fit_score=8.5
+)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+# After AI scores an essay:
+save_essay_ai_feedback(essay.id,
+    ai_score=7.8,
+    ai_feedback={
+        "clarity": 8,
+        "relevance": 9,
+        "originality": 7,
+        "grammar": 8,
+        "suggestions": [
+            "Add more specific examples of your leadership experience.",
+            "The conclusion could be stronger — tie back to your career goals.",
+        ]
+    }
+)
+```
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🗺️ Database Relationships
+
+```
+users
+ ├── profiles       (1 user = 1 profile)
+ ├── documents      (1 user = many docs)
+ └── applications   (1 user = many applications)
+       ├── scholarships  (many applications → 1 scholarship)
+       └── essays        (1 application = many essays, one per question)
+```
+
+---
+
+## 🔄 Switching to PostgreSQL Later (after hackathon)
+
+Change just ONE line in `app.py`:
+```python
+# Before (SQLite):
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///scholarship.db"
+
+# After (PostgreSQL):
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://username:password@localhost/scholardb"
+```
+
+Everything else stays the same.
+
+---
+
+## 🐛 Common Issues
+
+**`ModuleNotFoundError: No module named 'flask'`**
+→ Make sure your virtual environment is activated (`venv\Scripts\activate`)
+
+**`scholarship.db` not showing up**
+→ Run `python app.py` first — it creates the DB on startup
+
+**Want to reset the database**
+→ Delete `scholarship.db` and run `python app.py` then `python seed.py` again
