@@ -322,10 +322,8 @@ Each class = one table. SQLAlchemy handles the SQL for you.
 """
 
 from datetime import datetime, timezone
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
-db = SQLAlchemy()
+from extensions import db
 
 
 # ─────────────────────────────────────────────

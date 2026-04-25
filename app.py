@@ -80,7 +80,11 @@ def create_app():
     CORS(app)                        # ← NEW: allows React (port 3000) to call Flask (port 5000)
     db.init_app(app)
 
+<<<<<<< HEAD
 # ── Register blueprints (routes) ─────────────────────────────────────────
+=======
+    # ── Register blueprints (routes) here later ───────────────────────────────
+>>>>>>> 04d5b17500d4a2f875841ad4991309f74d25b740
     from routes.auth         import auth_bp
     from routes.scholarships import scholarships_bp
     from routes.profile      import profile_bp

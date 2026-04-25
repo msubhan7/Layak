@@ -7,7 +7,8 @@ Usage example:
 """
 
 from datetime import datetime, timezone
-from models import db, User, Profile, Scholarship, Document, Application, Essay
+from extensions import db
+from models import User, Profile, Scholarship, Document, Application, Essay
 
 
 # ══════════════════════════════════════════════
