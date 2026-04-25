@@ -1,25 +1,41 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# -----------------------
+# Node / Frontend
+# -----------------------
+node_modules/
+.pnp/
 .pnp.js
+coverage/
+build/
+.vercel
 
-# testing
-/coverage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# production
-/build
+# -----------------------
+# Python / Backend
+# -----------------------
+venv/
+__pycache__/
+*.pyc
+*.pyo
 
-# misc
-.DS_Store
+instance/
+uploads/
+*.db
+layak.db
+scholarship.db
+
+# -----------------------
+# Environment files
+# -----------------------
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.vercel
+# -----------------------
+# Misc
+# -----------------------
+.DS_Store
