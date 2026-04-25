@@ -22,8 +22,15 @@ def create_app():
     db.init_app(app)
 
     # ── Register blueprints (routes) here later ───────────────────────────────
-    # from routes.auth import auth_bp
-    # app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    from routes.auth         import auth_bp
+    from routes.scholarships import scholarships_bp
+    from routes.profile      import profile_bp
+    from routes.applications import applications_bp
+
+    app.register_blueprint(auth_bp,          url_prefix="/auth")
+    app.register_blueprint(scholarships_bp,  url_prefix="/scholarships")
+    app.register_blueprint(profile_bp,       url_prefix="/profile")
+    app.register_blueprint(applications_bp,  url_prefix="/applications")
 
     # ── Create all tables on first run ────────────────────────────────────────
     with app.app_context():
