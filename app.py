@@ -21,9 +21,16 @@ def create_app():
     CORS(app)                        # ← NEW: allows React (port 3000) to call Flask (port 5000)
     db.init_app(app)
 
-    # ── Register blueprints (routes) here later ───────────────────────────────
-    # from routes.auth import auth_bp
-    # app.register_blueprint(auth_bp, url_prefix="/api/auth")
+# ── Register blueprints (routes) ─────────────────────────────────────────
+    from routes.auth         import auth_bp
+    from routes.scholarships import scholarships_bp
+    from routes.profile      import profile_bp
+    from routes.applications import applications_bp
+
+    app.register_blueprint(auth_bp,          url_prefix="/auth")
+    app.register_blueprint(scholarships_bp,  url_prefix="/scholarships")
+    app.register_blueprint(profile_bp,       url_prefix="/profile")
+    app.register_blueprint(applications_bp,  url_prefix="/applications")
 
     # ── Create all tables on first run ────────────────────────────────────────
     with app.app_context():
@@ -31,7 +38,6 @@ def create_app():
         print("✅ Database tables created (or already exist).")
 
     return app
-
 
 if __name__ == "__main__":
     app = create_app()
