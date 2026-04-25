@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .env
 venv/
 __pycache__/
@@ -7,3 +8,11 @@ uploads/
 layak.db
 *.db
 .DS_Store
+=======
+venv/
+scholarship.db
+.env
+__pycache__/
+*.pyc
+instance/
+>>>>>>> 6bb11968b8d1cd29537d52571bfd2e7f78772dd9
