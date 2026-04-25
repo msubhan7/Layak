@@ -243,3 +243,20 @@ class Essay(db.Model):
 
     def __repr__(self):
         return f"<Essay app={self.application_id} score={self.ai_score}>"
+
+class University(db.Model):
+    __tablename__ = "universities"
+
+    id       = db.Column(db.Integer, primary_key=True)
+    name     = db.Column(db.String(255), nullable=False)
+    location = db.Column(db.String(255))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "location": self.location,
+        }
+
+    def __repr__(self):
+        return f"<University {self.name}>"
