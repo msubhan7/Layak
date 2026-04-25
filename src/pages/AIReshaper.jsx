@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChevronLeft, Zap, Loader2, RefreshCw, ChevronDown } from "lucide-react";
 import { MOCK_SCHOLARSHIPS, MOCK_ESSAYS } from "../constants/mockData";
 import { Check } from "lucide-react";
-import { createEssay } from "../api"; // or wherever it lives
+import { createEssay } from "../api";
 
 const RESHAPED_SAMPLES = {
     sc4: `The research question that keeps returning to me begins inside a PPR flat in Kepong, where I once watched eight Form Five girls study under a single flickering fluorescent bulb. If I could spend the next three years answering any question rigorously, it would be this: how does Malaysia know when a household has actually moved out of poverty — not out of the statistics?\n\nMy grandmother ran a warung on the ground floor of our flat for thirty years. She never appeared in any household income survey I have seen cited in policy papers, yet she was the economic anchor of at least a dozen families on our floor. Her invisibility in the data is not an accident — it is a measurement problem. And measurement problems, I have come to believe, are the most consequential kind of policy problem there is.`,

@@ -153,10 +153,9 @@ const Universities = ({
   return (
     <div className="px-8 py-8 fade-up">
 
-      {/* BACK BUTTON (goes back to previous app page) */}
       {setPage && (
         <button
-          onClick={() => setPage("scholarships")}   // 👈 CHANGE THIS if needed
+          onClick={() => setPage("scholarships")}   
           className="btn btn-ghost btn-sm mb-6"
         >
           <ArrowLeft size={13} /> Back
